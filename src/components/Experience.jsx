@@ -110,7 +110,6 @@ Our crew ensures your comfort throughout the journey.`,
     ];
   }, []);
 
-
   const clouds = useMemo(
     () => [
       // STARTING
@@ -302,16 +301,23 @@ Our crew ensures your comfort throughout the journey.`,
   const { play, setHasScroll, end, setEnd } = usePlay();
 
   useFrame((_state, delta) => {
-    if (window.innerWidth > window.innerHeight) {
-      // LANDSCAPE
-      camera.current.fov = 30;
-      camera.current.position.z = 5;
-    } else {
+    const isPortrait = window.innerWidth <= window.innerHeight;
+
+    if (isPortrait) {
       // PORTRAIT
-      camera.current.fov = 80;
-      camera.current.position.z = 2;
+      camera.current.fov = 80; // Adjust this value as needed for your scene
+      camera.current.position.z = 2; // Adjust camera position for portrait mode
+    } else {
+      // LANDSCAPE
+      camera.current.fov = 30; // Adjust this value as needed for your scene
+      camera.current.position.z = 5; // Adjust camera position for landscape mode
     }
 
+    // Update aspect ratio and other camera parameters if needed
+    camera.current.aspect = window.innerWidth / window.innerHeight;
+    camera.current.updateProjectionMatrix();
+
+    
     if (lastScroll.current <= 0 && scroll.offset > 0) {
       setHasScroll(true);
     }
